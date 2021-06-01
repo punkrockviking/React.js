@@ -1,5 +1,49 @@
 main {
+  display: flex;
+  flex-direction: row;
   text-align: center;
   vertical-align: center;
-  line-height: 100vh
+  line-height: 10vh;
+  color: blue;
+  height: 20rem;
 }
+
+.column1 {
+  flex: 3;
+  color: red;
+}
+
+.column2 {
+  flex: 6;
+  color: green;
+  flex-direction: column;
+}
+
+.column3 {
+  flex: 3;
+  color: orange;
+}
+
+.game-board {
+  display: flex;
+  flex: 6;
+  flex-direction: column;
+  height: 100%;
+}
+
+.row {
+  display: flex;
+  flex: 6;
+  flex-direction: row;
+  height: 100px;
+}
+
+.space-container {
+  display: flex;
+  cursor: pointer;
+  flex: 2;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid black;
+}
+
