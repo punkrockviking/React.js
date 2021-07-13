@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 
-// compenents
+// components
 /*
 - buttons
 - board
@@ -11,6 +11,7 @@ import './App.css';
 - turn tracker
 */
 
+// visually distinguish the last move made
 
 class GameBoard extends Component {
   render() {
@@ -57,9 +58,15 @@ class MessageBoard extends Component {
 
 class TurnTracker extends Component {
   render() {
+    const { isXturn } = this.props
     return (
       <div>
-        I track turns
+        <div>
+          Your move: 
+        </div>
+        <div>
+          {isXturn ? 'X' : 'O'}
+        </div>
       </div>
     )
   }
@@ -68,7 +75,7 @@ class TurnTracker extends Component {
 class Button extends Component {
   render() {
     const { buttonText, handleClick } = this.props
-    console.log('click handler', handleClick)
+    // console.log('click handler', handleClick)
     return (
       <div onClick={handleClick}>
         {buttonText}
@@ -77,7 +84,7 @@ class Button extends Component {
   }
 }
 
-
+//class App extends React.Compnent
 class App extends Component {
   constructor(props) {
     super(props)
@@ -95,6 +102,7 @@ class App extends Component {
 
     this.resetBoard = this.resetBoard.bind(this)
     this.placeToken = this.placeToken.bind(this)
+    this.undo = this.undo.bind(this)
   }
 
   resetBoard() {
@@ -106,6 +114,7 @@ class App extends Component {
       ],
       isXturn: true,
       numTurns: 0,
+      history: [],
       message: ''
     })
   }
@@ -113,7 +122,7 @@ class App extends Component {
   placeToken(row, col) {
     
     // if space has token, error message
-    const { board, isXturn, numTurns } = this.state
+    const { board, isXturn, numTurns, history } = this.state
     if (board[row][col]) {
       this.setState({message: 'error: space already has a token!'})
       return
@@ -121,11 +130,32 @@ class App extends Component {
     // replace empty space with token
     const newBoard = board.slice()
     newBoard[row][col] = isXturn ? 'X' : 'O'
+    const newHistory = history.slice()
+    newHistory.push([row, col])
     this.setState({
       board: newBoard,
       isXturn: !isXturn,
       numTurns: numTurns + 1,
+      history: newHistory,
       message: ''
+    })
+    console.log(newHistory)
+  }
+
+  undo() {
+    const { board, isXturn, numTurns, history } = this.state
+    if (!history.length) return
+    const newHistory = history.slice()
+    const [undoRow, undoCol] = newHistory.pop()
+    const newBoard = board.slice()
+    newBoard[undoRow][undoCol] = ''
+
+    this.setState({
+      board: newBoard,
+      isXturn: !isXturn,
+      numTurns: numTurns - 1,
+      history: newHistory,
+      message: 'Last turn undone. Redo your move!'
     })
   }
 
@@ -133,7 +163,7 @@ class App extends Component {
     return (
       <main>
         <div className='column1'>
-          <Button buttonText='Undo' />
+          <Button buttonText='Undo' handleClick={this.undo} />
           <Button buttonText='Reset Board' handleClick={this.resetBoard} />
         </div>
         <div className='column2'>
@@ -141,7 +171,7 @@ class App extends Component {
           <MessageBoard messageText={this.state.message} />
         </div>
         <div className='column3'>
-          <TurnTracker />
+          <TurnTracker isXturn={this.state.isXturn} />
         </div>
       </main>
     );
