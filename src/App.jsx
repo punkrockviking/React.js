@@ -97,12 +97,14 @@ class App extends Component {
       numTurns: 0,
       isXturn: true,
       history: [],
-      message: ''
+      message: '',
+      winner: false
     }
 
     this.resetBoard = this.resetBoard.bind(this)
     this.placeToken = this.placeToken.bind(this)
     this.undo = this.undo.bind(this)
+    this.winner = this.winner.bind(this)
   }
 
   resetBoard() {
@@ -122,7 +124,7 @@ class App extends Component {
   placeToken(row, col) {
     
     // if space has token, error message
-    const { board, isXturn, numTurns, history } = this.state
+    const { board, isXturn, numTurns, history, message } = this.state
     if (board[row][col]) {
       this.setState({message: 'error: space already has a token!'})
       return
@@ -139,7 +141,9 @@ class App extends Component {
       history: newHistory,
       message: ''
     })
-    console.log(newHistory)
+    if (hasWinner()) {
+      declareWinner(board([row][col]))
+    }
   }
 
   undo() {
@@ -158,6 +162,66 @@ class App extends Component {
       message: 'Last turn undone. Redo your move!'
     })
   }
+  
+/*
+need to change hasWinner, declareWinner, and isCatsGame to set state
+need to figure out how, when, and where to call those methods
+*/
+
+
+  hasWinner() {
+    // should run this method ever time a token is placed
+    // what do i change the return true/false statements to?
+    
+    const { board, iXturn, numTurns, message, winner } = this.state
+    // only check to see if hasWinner if this.numTurns >= 5
+    if (numTurns < 5) {
+      return false
+    }
+    // 3 tokens in a row (vert, horiz, or diag) wins game
+    // whole row or col has same token
+    for (let i = 0; i < board.length; i++) {
+      const isRowWinner = board[i][0] && board[i][0] === board[i][1] && board[i][1] === board[i][2]
+      const isColWinner = board[0][i] && board[0][i] === board[1][i] && board[1][i] === board[2][i]
+      if (isRowWinner) {
+        // winner winner chicken hasWinner
+        this.declareWinner(board[i][0])
+        return true
+      } 
+      if (isColWinner) {
+        this.declareWinner(board[0][i])
+        return true
+      }
+    }
+    // whole diag
+    const isLeftDiagWinner = board[0][0] && board[0][0] === board[1][1] && board[1][1] === board[2][2]
+    const isRightDiagWinner = board[0][2] && board[0][2] === board[1][1] && board[1][1] === board[2][0]
+    if (isLeftDiagWinner || isRightDiagWinner) {
+      this.declareWinner(board[1][1])
+      return true
+    } 
+    return false
+  }
+
+
+  declareWinner(winner) {
+    // should stop game, display winner in message
+    const { board } = this.state
+      this.setState({
+        message: `${winner} is the winner!`
+      })
+  }
+
+
+  isCatsGame() {
+    // should stop game, display cat's game in message
+    if (this.numTurns === 9) {
+      console.log("Cat's game! Play again!")
+      return true
+    }
+    return false
+  }
+
 
   render() {
     return (
@@ -278,7 +342,7 @@ class TicTacToe {
 
   isCatsGame() {
     if (this.numTurns === 9) {
-      console.log('Cat's game! Try again!')
+      console.log('Cat's game! Play again!')
       return true
     }
     return false
