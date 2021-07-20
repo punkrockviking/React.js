@@ -1,4 +1,8 @@
 main {
+  background-color: black;
+  height: 50rem;
+}
+.columns {
   display: flex;
   flex-direction: row;
   text-align: center;
@@ -9,8 +13,10 @@ main {
 }
 
 .column1 {
+  display: flex;
+  flex-direction: column;
   flex: 3;
-  color: red;
+  align-items: center;
 }
 
 .column2 {
@@ -22,6 +28,13 @@ main {
 .column3 {
   flex: 3;
   color: orange;
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+  font-size: 4rem;
+  color: white;
 }
 
 .game-board {
@@ -45,5 +58,19 @@ main {
   justify-content: center;
   align-items: center;
   border: 2px solid black;
+  background-color: grey;
 }
 
+.space-container:hover {
+  background-color: white;
+  
+}
+
+.button {
+  width: 55%;
+  margin: 15px 35px;
+  border: 2px solid black;
+  border-radius: 2rem;
+  background-color: white;
+  color: red;
+}

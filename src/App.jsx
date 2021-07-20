@@ -74,10 +74,10 @@ class TurnTracker extends Component {
 
 class Button extends Component {
   render() {
-    const { buttonText, handleClick } = this.props
+    const { buttonText, handleClick, style } = this.props
     // console.log('click handler', handleClick)
     return (
-      <div onClick={handleClick}>
+      <div className={style} onClick={handleClick}>
         {buttonText}
       </div>
     )
@@ -104,7 +104,7 @@ class App extends Component {
     this.resetBoard = this.resetBoard.bind(this)
     this.placeToken = this.placeToken.bind(this)
     this.undo = this.undo.bind(this)
-    this.winner = this.winner.bind(this)
+
   }
 
   resetBoard() {
@@ -117,14 +117,18 @@ class App extends Component {
       isXturn: true,
       numTurns: 0,
       history: [],
-      message: ''
+      message: '',
+      winner: false
     })
   }
 
   placeToken(row, col) {
     
-    // if space has token, error message
-    const { board, isXturn, numTurns, history, message } = this.state
+    const { board, isXturn, numTurns, history, message, winner } = this.state
+    if (this.hasWinner() || this.isCatsGame()) {
+      this.resetBoard()
+      return
+    }
     if (board[row][col]) {
       this.setState({message: 'error: space already has a token!'})
       return
@@ -140,10 +144,16 @@ class App extends Component {
       numTurns: numTurns + 1,
       history: newHistory,
       message: ''
+    }, () => {
+      if (this.hasWinner()) {
+        this.declareWinner(newBoard[row][col])
+        return
+      }
+      if (this.state.numTurns === 9) {
+        this.isCatsGame()
+      }
     })
-    if (hasWinner()) {
-      declareWinner(board([row][col]))
-    }
+
   }
 
   undo() {
@@ -159,7 +169,7 @@ class App extends Component {
       isXturn: !isXturn,
       numTurns: numTurns - 1,
       history: newHistory,
-      message: 'Last turn undone. Redo your move!'
+      message: 'Last turn undone. Go again!'
     })
   }
   
@@ -173,7 +183,7 @@ need to figure out how, when, and where to call those methods
     // should run this method ever time a token is placed
     // what do i change the return true/false statements to?
     
-    const { board, iXturn, numTurns, message, winner } = this.state
+    const { board, isXturn, numTurns, message, winner } = this.state
     // only check to see if hasWinner if this.numTurns >= 5
     if (numTurns < 5) {
       return false
@@ -183,30 +193,22 @@ need to figure out how, when, and where to call those methods
     for (let i = 0; i < board.length; i++) {
       const isRowWinner = board[i][0] && board[i][0] === board[i][1] && board[i][1] === board[i][2]
       const isColWinner = board[0][i] && board[0][i] === board[1][i] && board[1][i] === board[2][i]
-      if (isRowWinner) {
-        // winner winner chicken hasWinner
-        this.declareWinner(board[i][0])
+      if (isRowWinner || isColWinner) {
         return true
       } 
-      if (isColWinner) {
-        this.declareWinner(board[0][i])
-        return true
-      }
     }
     // whole diag
     const isLeftDiagWinner = board[0][0] && board[0][0] === board[1][1] && board[1][1] === board[2][2]
     const isRightDiagWinner = board[0][2] && board[0][2] === board[1][1] && board[1][1] === board[2][0]
     if (isLeftDiagWinner || isRightDiagWinner) {
-      this.declareWinner(board[1][1])
       return true
     } 
-    return false
   }
 
 
   declareWinner(winner) {
     // should stop game, display winner in message
-    const { board } = this.state
+    const { message } = this.state
       this.setState({
         message: `${winner} is the winner!`
       })
@@ -215,8 +217,11 @@ need to figure out how, when, and where to call those methods
 
   isCatsGame() {
     // should stop game, display cat's game in message
-    if (this.numTurns === 9) {
-      console.log("Cat's game! Play again!")
+    const { message, numTurns } = this.state
+    if (numTurns === 9) {
+      this.setState({
+        message: "Cat's game! Play again!"
+      })
       return true
     }
     return false
@@ -226,16 +231,25 @@ need to figure out how, when, and where to call those methods
   render() {
     return (
       <main>
-        <div className='column1'>
-          <Button buttonText='Undo' handleClick={this.undo} />
-          <Button buttonText='Reset Board' handleClick={this.resetBoard} />
+
+        <div className='title' >
+          Tic-Tac-Toe
         </div>
-        <div className='column2'>
-          <GameBoard board={this.state.board} placeToken={this.placeToken} />
-          <MessageBoard messageText={this.state.message} />
-        </div>
-        <div className='column3'>
-          <TurnTracker isXturn={this.state.isXturn} />
+        <div className='columns'>
+          <div className='column1'>
+            <Button style='button' buttonText='Undo' handleClick={this.undo} />
+            <Button style='button' buttonText='Reset' handleClick={this.resetBoard} />
+          </div>
+          <div className='column2'>
+            <GameBoard 
+              board={this.state.board} 
+              placeToken={this.placeToken}  
+            />
+            <MessageBoard messageText={this.state.message} />
+          </div>
+          <div className='column3'>
+            <TurnTracker isXturn={this.state.isXturn} />
+          </div>
         </div>
       </main>
     );
