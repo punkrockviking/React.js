@@ -21,7 +21,7 @@ main {
 
 .column2 {
   flex: 6;
-  color: green;
+  color: white;
   flex-direction: column;
 }
 
@@ -32,6 +32,7 @@ main {
 
 .title {
   display: flex;
+  padding: 2rem;
   justify-content: center;
   font-size: 4rem;
   color: white;
@@ -42,6 +43,11 @@ main {
   flex: 6;
   flex-direction: column;
   height: 100%;
+  /* box-shadow:
+    0 0 2rem 0.5rem #fff, 
+    0 0 1rem 0.2rem #f0f, 
+    0 0 1rem 0.5rem #0ff;
+  */
 }
 
 .row {
@@ -59,18 +65,31 @@ main {
   align-items: center;
   border: 2px solid black;
   background-color: grey;
+  font-size: 4rem;
 }
 
 .space-container:hover {
   background-color: white;
+  color: black;
   
 }
 
 .button {
   width: 55%;
   margin: 15px 35px;
+  cursor: pointer;
   border: 2px solid black;
   border-radius: 2rem;
   background-color: white;
   color: red;
+  font-size: 2rem;
+}
+
+.button:hover {
+  background-color: red;
+  color: white;
+}
+
+.token-style {
+  font-size: 4rem;
 }
