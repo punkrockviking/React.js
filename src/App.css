@@ -32,10 +32,19 @@ main {
 
 .title {
   display: flex;
-  padding: 2rem;
+  padding: 1rem;
   justify-content: center;
   font-size: 4rem;
   color: white;
+}
+
+.glow-title {
+  display: flex;
+  padding: 1rem;
+  justify-content: center;
+  font-size: 4rem;
+  color: white;
+  text-shadow: 0 0 10px #FF0000, 0 0 20px #0000FF;
 }
 
 .game-board {
@@ -48,6 +57,18 @@ main {
     0 0 1rem 0.2rem #f0f, 
     0 0 1rem 0.5rem #0ff;
   */
+}
+
+.glow-game-board {
+  display: flex;
+  flex: 6;
+  flex-direction: column;
+  height: 100%;
+  box-shadow:
+    0 0 2rem 0.5rem #fff, 
+    0 0 1rem 0.2rem #f0f, 
+    0 0 1rem 0.5rem #0ff;
+ 
 }
 
 .row {
@@ -93,3 +114,59 @@ main {
 .token-style {
   font-size: 4rem;
 }
+
+@media screen and (max-width: 768px) {
+  .columns {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    vertical-align: center;
+    line-height: 5vh;
+    color: blue;
+    height: 20rem;
+  }
+
+  .column1 {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .column2 {
+    color: white;
+    flex-direction: column;
+  }
+
+  .column3 {
+    color: orange;
+    padding: 2rem;
+  }
+
+  .button {
+    width: 25%;
+    margin: 0px 35px 15px 35px;
+    cursor: pointer;
+    border: 2px solid black;
+    border-radius: 2rem;
+    background-color: white;
+    color: red;
+    font-size: 1.5rem;
+  }
+  
+  .space-container {
+    min-height: 7rem;
+    display: flex;
+    cursor: pointer;
+    flex: 2;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid black;
+    background-color: grey;
+    font-size: 4rem;
+  }
+
+  .message {
+    height: 1rem;
+  }
+}
+

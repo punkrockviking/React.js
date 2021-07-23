@@ -4,10 +4,10 @@ import Space from './Space'
 
 class GameBoard extends Component {
   render() {
-    const { board, placeToken } = this.props
+    const { board, placeToken, gameBoardStyle } = this.props
 
     return (
-      <div className='game-board'>
+      <div className={gameBoardStyle}>
         {board.map((row, rowIndex) => (
           <div key={rowIndex} className='row'>
             {row.map((value, colIndex) => (

@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 
 class MessageBoard extends Component {
   render() {
-    const { messageText } = this.props
+    const { messageText, style } = this.props
     return (
-      <div>
+      <div className={style}>
         {messageText}
       </div>
     )

@@ -18,12 +18,14 @@ class App extends Component {
       isXturn: true,
       history: [],
       message: '',
-      winner: false
+      winner: false,
+      glowEnabled: false
     }
 
     this.resetBoard = this.resetBoard.bind(this)
     this.placeToken = this.placeToken.bind(this)
     this.undo = this.undo.bind(this)
+    this.titleGlow = this.titleGlow.bind(this)
 
   }
 
@@ -93,6 +95,13 @@ class App extends Component {
     })
   }
   
+  titleGlow() {
+    const { glowEnabled } = this.state
+    this.setState({
+      glowEnabled: !glowEnabled
+    })
+  }
+
 /*
 need to change hasWinner, declareWinner, and isCatsGame to set state
 need to figure out how, when, and where to call those methods
@@ -151,8 +160,8 @@ need to figure out how, when, and where to call those methods
   render() {
     return (
       <main>
-        <div className='title' >
-          Tic-Tac-Toe
+        <div className={this.state.glowEnabled ? 'glow-title' : 'title'} onClick={this.titleGlow} >
+          {this.state.glowEnabled ? 'Tic-Tac-Glo' : 'Tic-Tac-Toe'}
         </div>
         <div className='columns'>
           <div className='column1'>
@@ -163,8 +172,9 @@ need to figure out how, when, and where to call those methods
             <GameBoard 
               board={this.state.board} 
               placeToken={this.placeToken}  
+              gameBoardStyle={this.state.glowEnabled ? 'glow-game-board' : 'game-board'}
             />
-            <MessageBoard messageText={this.state.message} />
+            <MessageBoard style='message' messageText={this.state.message} />
           </div>
           <div className='column3'>
             <TurnTracker tokenStyle='token-style' isXturn={this.state.isXturn} />
